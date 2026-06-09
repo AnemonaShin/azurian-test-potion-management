@@ -1,3 +1,18 @@
 spring:
-    application:
-       name: potion
+  application:
+    name: potion
+    version: 1.0.0  
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/potion_managers
+    username: root
+    #Only Test
+    password: root
+  jpa:
+    database: postgresql
+    hibernate:
+      #Only Test
+      ddl-auto: create-drop
+
+server:
+  port: 9001
