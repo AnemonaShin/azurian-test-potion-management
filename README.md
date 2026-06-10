@@ -120,6 +120,12 @@ potion-management/
 
 ## Cómo Usar
 
+### Como recorrer
+
+Todo se ejecuta desde el menu de hambuerguesa, ahí se podrá ver tanto la lista de usuarios existentes en la bd como la lista de los roles existentes.
+
+como administrador se pueden hacer las ediciones y agregaciones correspondientes.
+
 ### Data para prueba
 
 La data para los usuarios existentes cuando levanta el proyecto son:
@@ -129,7 +135,9 @@ La data para los usuarios existentes cuando levanta el proyecto son:
 | admin   | admin1234. |
 | pivote  | piv1234.   |
 
-De todas formas se deberia poder ingresar con usuarios que se registre.
+De todas formas se deberia poder ingresar con usuarios que se registren.
+
+Solo los administradores podrán actualizar data de otros usuarios, los usuarios regularmente pueden actualizar su data desde settings en el menu de hamburguesa.
 
 ### Pruebas funcionales por Postman
 
