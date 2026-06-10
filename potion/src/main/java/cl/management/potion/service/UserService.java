@@ -6,14 +6,15 @@ import org.springframework.stereotype.Service;
 
 import cl.management.potion.dto.request.UserRequest;
 import cl.management.potion.dto.response.DefaultResponse;
+import cl.management.potion.dto.response.UserResponse;
 import cl.management.potion.exception.ServiceException;
 
 /**
  * Service Interface designed for the control of user's data.
  * 
  * @author Christian Ramirez (cramireza1997@gmail.com)
- * @since 08-06-2026
- * @version 1.0.0
+ * @since 09-06-2026
+ * @version 1.0.1
  */
 @Service
 public interface UserService {
@@ -34,7 +35,7 @@ public interface UserService {
    * @return Paginated Object sorted by username's.
    * @throws ServiceException Custom exception for services.
    */
-  public Page<Object> listUsers(PageRequest pageRequest) throws ServiceException;
+  public Page<UserResponse> listUsers(String token, PageRequest pageRequest) throws ServiceException;
 
   /**
    * Method that search an unique user by his username.
@@ -43,7 +44,7 @@ public interface UserService {
    * @return Default Response with user data.
    * @throws ServiceException Custom exception for services.
    */
-  public DefaultResponse searchUser(String username) throws ServiceException;
+  public DefaultResponse searchUser(String token, String username) throws ServiceException;
 
   /**
    * Method that update a user's data.
@@ -52,7 +53,7 @@ public interface UserService {
    * @param body Request User DTO with updated from front.
    * @throws ServiceException Custom exception for services.
    */
-  public void updateUser(Long id, UserRequest body) throws ServiceException;
+  public DefaultResponse updateUser(String token, long id, UserRequest body) throws ServiceException;
 
   /**
    * Method that deactivate an existent user.
@@ -60,6 +61,14 @@ public interface UserService {
    * @param id Identificator of an user.
    * @throws ServiceException Custom exception for services.
    */
-  public void deactivateUser(long id) throws ServiceException;
+  public void deactivateUser(String token, long id) throws ServiceException;
+
+  /**
+   * Method that activate an existent user.
+   * 
+   * @param id Identificator of an user.
+   * @throws ServiceException Custom exception for services.
+   */
+  public void activateUser(String token, long id) throws ServiceException;
 
 }

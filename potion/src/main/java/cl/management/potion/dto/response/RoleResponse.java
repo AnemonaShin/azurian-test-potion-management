@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Data Transfer Object - User Response
- * User's Data Response.
+ * Data Transfer Object - Role Response
+ * Role's Data Response.
  * 
  * @author Christian Ramirez (cramireza1997@gmail.com)
  * @since 09-06-2026
@@ -19,13 +19,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class UserResponse {
+public class RoleResponse {
 
-  private Long id;
+    private Long id;
 
-  private String username;
+    private String name;
 
-  private String email;
+    private String roleIcon;
 
-  private RoleResponse role;
 }

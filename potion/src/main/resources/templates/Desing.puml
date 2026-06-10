@@ -4,10 +4,8 @@ class User{
     +id: Long
     +username: String
     +password: String
-    +fullName: String
     +email: String
-    +address: String
-    +roleId: Role
+    +role: Role
     +active: boolean
     +createdAt: LocalDateTime
     +updatedAt: LocalDateTime
@@ -18,16 +16,6 @@ class Role {
     +type: String
 }
 
-class Item{
-    +id: Long
-    +type: String
-    +name: String
-    +description: String
-    +createdAt: LocalDateTime
-    +updatedAt: LocalDateTime
-}
-User "1" -- "1" Role: Can be
-
-User "1" -- "*" Item : Creates
+User "*" -- "1" Role : has
 
 @enduml

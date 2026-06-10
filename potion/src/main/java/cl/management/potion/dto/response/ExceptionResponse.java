@@ -1,31 +1,29 @@
 package cl.management.potion.dto.response;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
- * Data Transfer Object - User Response
- * User's Data Response.
+ * Data Transfer Object - Exception Response
+ * Exception response for system error responses.
  * 
  * @author Christian Ramirez (cramireza1997@gmail.com)
  * @since 09-06-2026
- * @version 1.0.1
+ * @version 1.0.0
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Builder
-public class UserResponse {
+public class ExceptionResponse {
 
-  private Long id;
+    String code;
 
-  private String username;
+    String message;
 
-  private String email;
-
-  private RoleResponse role;
+    LocalDateTime timestamp;
 }

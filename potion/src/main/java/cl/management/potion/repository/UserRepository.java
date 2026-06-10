@@ -1,5 +1,7 @@
 package cl.management.potion.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +16,11 @@ import cl.management.potion.model.UserEntity;
  */
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
+
+    public UserEntity searchById(Long id);
+
+    public UserEntity searchByUsername(String username);
+
+    public Page<UserEntity> findAll(Pageable pageable);
 
 }

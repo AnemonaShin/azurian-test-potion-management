@@ -4,15 +4,23 @@ spring:
     version: 1.0.0  
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/potion_managers
-    username: root
-    #Only Test
-    password: root
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/potion_managers?options=-c%20timezone=America/Santiago}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
   jpa:
+    defer-datasource-initialization: true
     database: postgresql
     hibernate:
-      #Only Test
-      ddl-auto: create-drop
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:create-drop}
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  sql:
+    init:
+      data-locations:
+      - classpath*:db/data.sql
+      mode: always
+
 
 server:
   port: 9001

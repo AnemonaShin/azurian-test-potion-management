@@ -8,60 +8,52 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import cl.management.potion.dto.request.UserRequest;
-import cl.management.potion.dto.response.DefaultResponse;
+import cl.management.potion.dto.request.RoleRequest;
 import cl.management.potion.exception.ServiceException;
-import cl.management.potion.service.UserService;
+import cl.management.potion.service.RoleService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.web.bind.annotation.PutMapping;
 
 /**
- * Rest Controller for the User part of the solution.
+ * Service Interface designed for the control of role's data.
  * 
  * @author Christian Ramirez (cramireza1997@gmail.com)
  * @since 09-06-2026
- * @version 1.0.1
+ * @version 1.0.0
  */
 @RestController
-@RequestMapping(path = "/users")
-@Slf4j
-public class UserController {
+@RequestMapping(path = "/roles")
+public class RoleController {
 
-  private UserService service;
+  private RoleService service;
 
-  /**
-   * Public Constructor of User Controller
-   * 
-   * @param service User Service for management of it's data.
-   */
-  public UserController(UserService service) {
+  public RoleController(RoleService service) {
     this.service = service;
   }
 
   /**
-   * Register a new user on the database.
+   * Register an new ROLE for the System.
    * 
-   * @param body Request DTO for user info.
+   * @param body Request DTO for role info.
    * @return Response an default response object.
    * @throws ServiceException Custom exception for services.
    */
   @Tag(name = "registers", description = "Data registers endpoints")
   @PostMapping(path = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<DefaultResponse> registerUser(@RequestBody(required = true) UserRequest body)
-      throws ServiceException {
-    return ResponseEntity.ok().body(service.registerUser(body));
+  public ResponseEntity<Object> createRole(
+      @RequestHeader(name = "Authorization", required = true) String token,
+      @RequestBody(required = true) RoleRequest body) throws ServiceException {
+    return ResponseEntity.ok().body(service.createRole(token, body));
   }
 
   /**
-   * List all users sorted by Username.
+   * List all roles sorted by ID.
    * 
    * @param size Param for page size.
    * @param page Param paging place.
@@ -70,77 +62,62 @@ public class UserController {
    */
   @Tag(name = "searchs", description = "Searchs endpoints")
   @GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Object> listUsers(
+  public ResponseEntity<Object> listRoles(
       @RequestHeader(name = "Authorization", required = true) String token,
-      @RequestParam(required = false, defaultValue = "20") Integer size,
-      @RequestParam(required = false, defaultValue = "0") Integer page) throws ServiceException {
-    return ResponseEntity.ok().body(service.listUsers(token, PageRequest.of(page, size)));
+      @RequestParam(required = false, defaultValue = "10") Integer size,
+      @RequestParam(required = true, defaultValue = "0") Integer page) throws ServiceException {
+    return ResponseEntity.ok().body(service.listRoles(token, PageRequest.of(page, size)));
   }
 
   /**
-   * Search an user by its username.
+   * Update an existent role.
    * 
-   * @param username Username to search.
-   * @return Response an default response object.
-   * @throws ServiceException Custom exception for services.
-   */
-  @Tag(name = "searchs", description = "Searchs endpoints")
-  @GetMapping(path = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<DefaultResponse> searchUser(
-      @RequestHeader(name = "Authorization", required = true) String token,
-      @PathVariable(name = "username", required = true) String username) throws ServiceException {
-    return ResponseEntity.ok().body(service.searchUser(token, username));
-  }
-
-  /**
-   * Update an existent user.
-   * 
-   * @param userId Id of an user.
-   * @param body   Request DTO for user info.
+   * @param roleId Id of an Role.
+   * @param body   Request DTO for Role info.
    * @return Response an default response object.
    * @throws ServiceException Custom exception for services.
    */
   @Tag(name = "modifications", description = "Modifications to data endpoints")
-  @PutMapping(path = "/{user_id}")
-  public ResponseEntity<Object> updateUser(
+  @PutMapping(path = "/{role_id}")
+  public ResponseEntity<Object> updateRole(
       @RequestHeader(name = "Authorization", required = true) String token,
-      @PathVariable(name = "user_id") Long userId,
-      @RequestBody(required = true) UserRequest body) throws ServiceException {
+      @PathVariable(name = "role_id") Long roleId,
+      @RequestBody(required = true) RoleRequest body) throws ServiceException {
 
-    return ResponseEntity.ok().body(service.updateUser(token, userId, body));
+    return ResponseEntity.ok().body(service.updateRole(token, roleId, body));
   }
 
   /**
-   * Deactivate an existen user.
+   * Deactivate an existen role.
    * 
-   * @param userId Id of an user.
+   * @param roleId Id of an role.
    * @return Response an default response object.
    * @throws ServiceException Custom exception for services.
    */
   @Tag(name = "deletions", description = "Endpoints designed for deletions")
-  @DeleteMapping(path = "/{user_id}")
-  public ResponseEntity<Object> deactivateUser(
+  @DeleteMapping(path = "/{role_id}")
+  public ResponseEntity<Object> deactivateRole(
       @RequestHeader(name = "Authorization", required = true) String token,
-      @PathVariable(name = "user_id") Long userId) throws ServiceException {
+      @PathVariable(name = "role_id") Long roleId) throws ServiceException {
 
-    service.deactivateUser(token, userId);
+    service.deactivateRole(token, roleId);
     return ResponseEntity.noContent().build();
   }
 
   /**
-   * Activate an existen user.
+   * Activate an existen role.
    * 
-   * @param userId Id of an user.
+   * @param roleId Id of an role.
    * @return Response an default response object.
    * @throws ServiceException Custom exception for services.
    */
   @Tag(name = "modifications", description = "Modifications to data endpoints")
-  @PatchMapping(path = "/{user_id}/activate")
+  @PatchMapping(path = "/{role_id}/activate")
   public ResponseEntity<Object> activateUser(
       @RequestHeader(name = "Authorization", required = true) String token,
-      @PathVariable(name = "user_id") Long userId) throws ServiceException {
+      @PathVariable(name = "role_id") Long roleId) throws ServiceException {
 
-    service.activateUser(token, userId);
+    service.activateRole(token, roleId);
     return ResponseEntity.noContent().build();
   }
 }
