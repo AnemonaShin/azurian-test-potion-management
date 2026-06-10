@@ -25,7 +25,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.min.css"
             ]
           },
           "configurations": {
@@ -54,6 +55,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.js"
+          },
           "configurations": {
             "production": {
               "buildTarget": "potion-management:build:production"
@@ -65,7 +69,18 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "coverage": true,
+            "coverageReporters": ["text", "html", "lcovonly"],
+            "coverageThresholds": {
+              "statements": 80,
+              "branches": 60,
+              "functions": 60,
+              "lines": 80
+            },
+            "coverageExclude": ["src/main.ts"]
+          }
         }
       }
     }

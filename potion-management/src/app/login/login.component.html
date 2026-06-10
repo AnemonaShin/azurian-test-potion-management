@@ -1,0 +1,88 @@
+<div class="login-wrapper">
+  <form *ngIf="!showRegister" (ngSubmit)="login()" class="login-form">
+    <h2><i class="bi bi-flask"></i> Potion Management</h2>
+
+    <label for="username">Username</label>
+    <input
+      id="username"
+      name="username"
+      type="text"
+      [(ngModel)]="username"
+      required
+      autocomplete="username"
+    />
+
+    <label for="password">Password</label>
+    <input
+      id="password"
+      name="password"
+      type="password"
+      [(ngModel)]="password"
+      required
+      autocomplete="current-password"
+    />
+
+    <p *ngIf="error" class="error">{{ error }}</p>
+
+    <button type="submit">Sign in</button>
+
+    <p class="toggle-text">
+      Don't have an account?
+      <a role="button" (click)="toggleRegister()">Register here</a>
+    </p>
+  </form>
+
+  <form *ngIf="showRegister" (ngSubmit)="register()" class="login-form">
+    <h2><i class="bi bi-potion"></i> Create Account</h2>
+
+    <label for="reg-username">Username</label>
+    <input
+      id="reg-username"
+      name="reg-username"
+      type="text"
+      [(ngModel)]="regUsername"
+      required
+    />
+
+    <label for="reg-email">Email</label>
+    <input
+      id="reg-email"
+      name="reg-email"
+      type="email"
+      [(ngModel)]="regEmail"
+      required
+    />
+
+    <label for="reg-password">Password</label>
+    <input
+      id="reg-password"
+      name="reg-password"
+      type="password"
+      [(ngModel)]="regPassword"
+      required
+    />
+
+    <label>Role</label>
+    <div class="role-options">
+      <button
+        type="button"
+        *ngFor="let opt of roleOptions"
+        class="role-btn"
+        [class.selected]="regRole === opt.value"
+        (click)="regRole = opt.value"
+      >
+        <i class="bi {{ iconClass(opt.icon) }}"></i>
+        {{ opt.label }}
+      </button>
+    </div>
+
+    <p *ngIf="error" class="error">{{ error }}</p>
+
+    <button type="submit">Create Account</button>
+
+    <p class="toggle-text">
+      Already have an account?
+      <a role="button" (click)="toggleRegister()">Sign in</a>
+    </p>
+  </form>
+</div>

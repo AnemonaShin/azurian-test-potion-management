@@ -1,0 +1,21 @@
+@startuml Potion Management Design
+
+class User{
+    +id: Long
+    +username: String
+    +password: String
+    +email: String
+    +role: Role
+    +active: boolean
+    +createdAt: LocalDateTime
+    +updatedAt: LocalDateTime
+}
+
+class Role {
+    +id: Long
+    +type: String
+}
+
+User "*" -- "1" Role : has
+
+@enduml

@@ -1,0 +1,78 @@
+<div class="page">
+  <h1 class="page-title">Users</h1>
+
+  <p *ngIf="loading" class="msg">Loading...</p>
+  <p *ngIf="error" class="msg error">{{ error }}</p>
+
+  <div *ngIf="!loading && !error" class="toolbar">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search by username or email..."
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
+  <table *ngIf="!loading && !error && filteredUsers.length">
+    <thead>
+      <tr>
+        <th class="sortable" (click)="toggleSort('username')">
+          Username <span class="sort-icon">{{ sortIndicator('username') }}</span>
+        </th>
+        <th class="sortable" (click)="toggleSort('email')">
+          Email <span class="sort-icon">{{ sortIndicator('email') }}</span>
+        </th>
+        <th>Role</th>
+        <th>Status</th>
+        <th *ngIf="isAdmin">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of filteredUsers" [class.inactive]="!u.active">
+        <td>{{ u.username }}</td>
+        <td>{{ u.email }}</td>
+        <td><i class="bi {{ iconClass(u.role.roleIcon) }}"></i> {{ u.role.name }}</td>
+        <td>
+          <span *ngIf="u.active" class="badge active-badge">Active</span>
+          <span *ngIf="!u.active" class="badge inactive-badge">Inactive</span>
+        </td>
+        <td *ngIf="isAdmin" class="actions">
+          <button *ngIf="!isSelf(u)" class="btn btn-sm btn-outline" (click)="openUpdateModal(u)">Update</button>
+          <button *ngIf="u.active && !isSelf(u)" class="btn btn-sm btn-danger" (click)="deactivateUser(u)">Deactivate</button>
+          <button *ngIf="!u.active && !isSelf(u)" class="btn btn-sm btn-success" (click)="activateUser(u)">Activate</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!loading && !error && !filteredUsers.length" class="msg">No users match your search.</p>
+</div>
+
+<div *ngIf="showModal" class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2>Update User</h2>
+    <p *ngIf="modalError" class="msg error">{{ modalError }}</p>
+
+    <label>Username</label>
+    <input type="text" [(ngModel)]="form.username" />
+
+    <label>Password <span class="hint">(leave blank to keep)</span></label>
+    <input type="password" [(ngModel)]="form.password" />
+
+    <label>Email</label>
+    <input type="email" [(ngModel)]="form.email" />
+
+    <label>Role</label>
+    <select [(ngModel)]="form.role" [disabled]="isSelf(editingUser)">
+      <option *ngFor="let opt of roleOptions" [value]="opt">{{ opt }}</option>
+    </select>
+    <span *ngIf="isSelf(editingUser)" class="hint">You cannot change your own role.</span>
+
+    <div class="modal-actions">
+      <button class="btn" (click)="closeModal()">Cancel</button>
+      <button class="btn btn-primary" (click)="saveUser()" [disabled]="saving">
+        {{ saving ? 'Saving...' : 'Save' }}
+      </button>
+    </div>
+  </div>
+</div>

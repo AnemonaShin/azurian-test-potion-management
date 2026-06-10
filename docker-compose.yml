@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: 'postgres:18'
+    environment:
+      - 'POSTGRES_DB=potion_managers'
+      - 'POSTGRES_PASSWORD=postgres'
+      - 'POSTGRES_USER=postgres'
+      - 'TZ=America/Santiago'
+    ports:
+      - '5433:5432'
+    command: postgres -c timezone=America/Santiago
+    volumes:
+      - postgres_data:/var/lib/postgresql
+  api:
+    build: ./potion
+    container_name: potion_management_api
+    ports:
+      - '9001:9001'
+    depends_on:
+      - postgres
+    environment:
+      #Time/Date Configs
+      - 'TZ=America/Santiago'
+      - 'JAVA_TOOL_OPTIONS=-Duser.timezone=America/Santiago'
+      #DB Configs
+      - 'SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/potion_managers?options=-c%20timezone=America/Santiago'
+      - 'SPRING_DATASOURCE_USERNAME=postgres'
+      - 'SPRING_DATASOURCE_PASSWORD=postgres'
+      #JPA Configs
+      - 'SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop'
+  frontend:
+    build: ./potion-management
+    container_name: potion_management_frontend
+    ports:
+      - '4200:80'
+    depends_on:
+      - api
+
+volumes:
+  postgres_data: {}
