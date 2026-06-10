@@ -118,6 +118,10 @@ potion-management/
 | API Spring Boot  | 9001   |
 | PostgreSQL       | 5433   |
 
+### Documentacion Swagger
+
+Se puede revizar la documentacion ingresando a la siguiente url: http://localhost:9001/swagger-ui.html
+
 ## Cómo Usar
 
 ### Como recorrer
