@@ -120,6 +120,21 @@ potion-management/
 
 ## Cómo Usar
 
+### Data para prueba
+
+La data para los usuarios existentes cuando levanta el proyecto son:
+
+| Usuario | Contraseña |
+| ------- | ---------- |
+| admin   | admin1234. |
+| pivote  | piv1234.   |
+
+De todas formas se deberia poder ingresar con usuarios que se registre.
+
+### Pruebas funcionales por Postman
+
+Dentro de la carpeta resources/templates en la Aplicacion Java se encuentra un .zip con lo necesario para la ejecucion.
+
 ### Ejecución con Docker Compose
 
 Levantar todos los servicios:
