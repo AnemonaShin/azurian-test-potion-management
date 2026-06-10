@@ -13,21 +13,29 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import cl.management.potion.dto.request.RoleRequest;
 import cl.management.potion.dto.response.DefaultResponse;
+import cl.management.potion.dto.response.RoleResponse;
 import cl.management.potion.exception.ServiceException;
 import cl.management.potion.service.RoleService;
 import cl.management.potion.util.enums.ExceptionListEnum;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 /**
  * Unit tests for RoleController using JUnit 5 and Mockito.
@@ -37,12 +45,14 @@ import cl.management.potion.util.enums.ExceptionListEnum;
  * @version 1.0.0
  */
 @WebMvcTest(RoleController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @DisplayName("RoleController Tests")
 class RoleControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
     private RoleService roleService;
 
     @Autowired
@@ -98,6 +108,8 @@ class RoleControllerTest {
         // Arrange
         RoleRequest invalidRequest = new RoleRequest();
         invalidRequest.setName(null); // Invalid: null name
+        when(roleService.createRole(anyString(), any(RoleRequest.class)))
+                .thenThrow(new ServiceException(ExceptionListEnum.ROLE_REQUEST_NAME_ERROR));
 
         // Act & Assert
         mockMvc.perform(post("/roles/")
@@ -111,8 +123,10 @@ class RoleControllerTest {
     @DisplayName("Should list all roles successfully")
     void testListRolesSuccess() throws Exception {
         // Arrange
-        // Note: listRoles returns Page<RoleResponse>, not DefaultResponse
-        // This test simplified for demonstration
+        var roleResponse = RoleResponse.builder()
+                .id(1L).name("ADMIN").roleIcon("admin-icon").build();
+        Page<RoleResponse> rolePage = new PageImpl<>(List.of(roleResponse), PageRequest.of(0, 10), 1);
+        when(roleService.listRoles(anyString(), any(PageRequest.class))).thenReturn(rolePage);
 
         // Act & Assert
         mockMvc.perform(get("/roles/")
@@ -120,7 +134,8 @@ class RoleControllerTest {
                 .param("size", "10")
                 .param("page", "0"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content[0].name").value("ADMIN"));
     }
 
     @Test

@@ -4,6 +4,7 @@ import java.util.Base64;
 import java.util.HashMap;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cl.management.potion.dto.response.DefaultResponse;
 import cl.management.potion.exception.ServiceException;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@Transactional
 public class LoginServiceImpl implements LoginService {
 
   private UserRepository userRepository;
@@ -50,7 +52,10 @@ public class LoginServiceImpl implements LoginService {
 
       var response = new HashMap<String, Object>();
 
+      response.put("id", userEntity.getId());
       response.put("token", newEncryptedToken);
+      response.put("role", userEntity.getRole().getName());
+      response.put("username", userEntity.getUsername());
 
       return DefaultResponse.builder().code("200").message("TOKEN GENERATED").response(response).build();
     } catch (ServiceException exe) {

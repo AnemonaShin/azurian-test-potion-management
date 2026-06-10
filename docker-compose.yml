@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: 'postgres:latest'
+    image: 'postgres:18'
     environment:
       - 'POSTGRES_DB=potion_managers'
       - 'POSTGRES_PASSWORD=postgres'
@@ -27,7 +27,14 @@ services:
       - 'SPRING_DATASOURCE_USERNAME=postgres'
       - 'SPRING_DATASOURCE_PASSWORD=postgres'
       #JPA Configs
-      - 'SPRING_JPA_HIBERNATE_DDL_AUTO=update'
-      
+      - 'SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop'
+  frontend:
+    build: ./potion-management
+    container_name: potion_management_frontend
+    ports:
+      - '4200:80'
+    depends_on:
+      - api
+
 volumes:
   postgres_data: {}

@@ -1,0 +1,20 @@
+<nav>
+  <button class="hamburger" (click)="toggle()" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<div class="overlay" [class.open]="open" (click)="close()"></div>
+
+<div class="sidepanel" [class.open]="open">
+  <button class="close-btn" (click)="close()">&times;</button>
+  <ul>
+    <li><a (click)="navigate('/users')">Users</a></li>
+    <li *ngIf="isAdmin"><a (click)="navigate('/roles')">Roles</a></li>
+    <li><a (click)="navigate('/settings')">Settings</a></li>
+    <li class="divider"></li>
+    <li><a (click)="logout()">Logout</a></li>
+  </ul>
+</div>

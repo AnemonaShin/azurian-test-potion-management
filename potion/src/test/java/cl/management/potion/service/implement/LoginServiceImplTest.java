@@ -71,7 +71,7 @@ class LoginServiceImplTest {
         when(userRepository.searchByUsername("testuser")).thenReturn(mockUser);
 
         try (MockedStatic<ValidationUtil> mockedValidation = org.mockito.Mockito.mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString(), anyString(), anyString()));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString(), anyString(), anyString())).thenAnswer(i -> null);
 
             // Act
             DefaultResponse response = loginService.getLoginToken(validToken);

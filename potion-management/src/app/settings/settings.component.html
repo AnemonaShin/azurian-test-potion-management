@@ -1,0 +1,26 @@
+<div class="page">
+  <h1 class="page-title"><i class="bi bi-gear"></i> Settings</h1>
+
+  <p *ngIf="loading" class="msg">Loading...</p>
+
+  <div *ngIf="!loading" class="settings-card">
+    <p *ngIf="success" class="success">{{ success }}</p>
+    <p *ngIf="error" class="error">{{ error }}</p>
+
+    <label>Username</label>
+    <input type="text" [(ngModel)]="username" />
+
+    <label>Email</label>
+    <input type="email" [(ngModel)]="email" />
+
+    <label>Password <span class="hint">(leave blank to keep)</span></label>
+    <input type="password" [(ngModel)]="password" />
+
+    <label>Role</label>
+    <p class="role-display"><i class="bi {{ iconClass(roleIcon) }}"></i> {{ role }}</p>
+
+    <button class="btn btn-primary" (click)="save()" [disabled]="saving">
+      {{ saving ? 'Saving...' : 'Save Changes' }}
+    </button>
+  </div>
+</div>

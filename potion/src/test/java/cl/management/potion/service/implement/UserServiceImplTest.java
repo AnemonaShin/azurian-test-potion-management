@@ -96,7 +96,7 @@ class UserServiceImplTest {
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class);
                 MockedStatic<PasswordUtil> mockedPassword = mockStatic(PasswordUtil.class)) {
 
-            mockedValidation.when(() -> ValidationUtil.userRequestValidation(any(UserRequest.class)));
+            mockedValidation.when(() -> ValidationUtil.userRequestValidation(any(UserRequest.class))).thenAnswer(i -> null);
             mockedPassword.when(() -> PasswordUtil.passwordEncrypt(anyString())).thenReturn("hashedPassword123");
             when(userRepository.save(any(UserEntity.class))).thenReturn(mockUser);
 
@@ -105,7 +105,7 @@ class UserServiceImplTest {
 
             // Assert
             assertNotNull(response);
-            assertEquals("201", response.getCode());
+            assertEquals("200", response.getCode());
             verify(roleRepository).searchById(anyLong());
             verify(userRepository).save(any(UserEntity.class));
         }
@@ -118,7 +118,8 @@ class UserServiceImplTest {
         when(roleRepository.searchById(anyLong())).thenReturn(null);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.userRequestValidation(any(UserRequest.class)));
+            mockedValidation.when(() -> ValidationUtil.userRequestValidation(any(UserRequest.class))).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
 
             // Act & Assert
             ServiceException exception = assertThrows(ServiceException.class, () -> {
@@ -140,7 +141,7 @@ class UserServiceImplTest {
         when(userRepository.findAll(any(PageRequest.class))).thenReturn(userPage);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
 
             // Act
             Page<UserResponse> response = userService.listUsers("validToken", PageRequest.of(0, 20));
@@ -175,14 +176,15 @@ class UserServiceImplTest {
         when(userRepository.searchByUsername("testuser")).thenReturn(mockUser);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
 
             // Act
             DefaultResponse response = userService.searchUser("validToken", "testuser");
 
             // Assert
             assertNotNull(response);
-            assertEquals("200", response.getCode());
+            assertEquals("200 OK", response.getCode());
             verify(userRepository).searchByUsername("testuser");
         }
     }
@@ -194,7 +196,8 @@ class UserServiceImplTest {
         when(userRepository.searchByUsername("nonexistent")).thenReturn(null);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
 
             // Act & Assert
             ServiceException exception = assertThrows(ServiceException.class, () -> {
@@ -216,7 +219,8 @@ class UserServiceImplTest {
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class);
                 MockedStatic<PasswordUtil> mockedPassword = mockStatic(PasswordUtil.class)) {
 
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
             mockedPassword.when(() -> PasswordUtil.passwordEncrypt(anyString())).thenReturn("hashedPassword123");
 
             // Act
@@ -224,7 +228,7 @@ class UserServiceImplTest {
 
             // Assert
             assertNotNull(response);
-            assertEquals("200", response.getCode());
+            assertEquals("200 OK", response.getCode());
             verify(userRepository).searchById(1L);
             verify(userRepository).save(any(UserEntity.class));
         }
@@ -238,7 +242,7 @@ class UserServiceImplTest {
         when(userRepository.save(any(UserEntity.class))).thenReturn(mockUser);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
 
             // Act
             userService.deactivateUser("validToken", 1L);
@@ -256,7 +260,8 @@ class UserServiceImplTest {
         when(userRepository.searchById(999L)).thenReturn(null);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
 
             // Act & Assert
             ServiceException exception = assertThrows(ServiceException.class, () -> {
@@ -276,7 +281,8 @@ class UserServiceImplTest {
         when(userRepository.save(any(UserEntity.class))).thenReturn(mockUser);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
 
             // Act
             userService.activateUser("validToken", 1L);

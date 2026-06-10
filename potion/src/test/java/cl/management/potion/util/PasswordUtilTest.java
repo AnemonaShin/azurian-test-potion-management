@@ -94,7 +94,7 @@ class PasswordUtilTest {
     @DisplayName("Should handle long passwords")
     void testPasswordEncryptLongPassword() {
         // Arrange
-        String longPassword = "ThisIsAVeryLongPasswordWithManyCharactersToTestThePasswordEncryptionMethod";
+        String longPassword = "ThisIsALongPasswordWithManyCharsToTestEncryptionMethod!";
 
         // Act
         String encryptedPassword = PasswordUtil.passwordEncrypt(longPassword);

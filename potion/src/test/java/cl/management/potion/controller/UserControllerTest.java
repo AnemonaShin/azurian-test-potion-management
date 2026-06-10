@@ -13,12 +13,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -26,10 +29,15 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import cl.management.potion.dto.request.UserRequest;
 import cl.management.potion.dto.response.DefaultResponse;
+import cl.management.potion.dto.response.UserResponse;
+import cl.management.potion.dto.response.RoleResponse;
 import cl.management.potion.exception.ServiceException;
 import cl.management.potion.service.UserService;
 import cl.management.potion.util.enums.ExceptionListEnum;
 import cl.management.potion.util.enums.RoleEnum;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 /**
  * Unit tests for UserController using JUnit 5 and Mockito.
@@ -39,6 +47,7 @@ import cl.management.potion.util.enums.RoleEnum;
  * @version 1.0.0
  */
 @WebMvcTest(UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @DisplayName("UserController Tests")
 class UserControllerTest {
 
@@ -92,6 +101,8 @@ class UserControllerTest {
         // Arrange
         UserRequest invalidRequest = new UserRequest();
         invalidRequest.setUsername(null); // Invalid: null username
+        when(userService.registerUser(any(UserRequest.class)))
+                .thenThrow(new ServiceException(ExceptionListEnum.USER_REQUEST_USERNAME_ERROR));
 
         // Act & Assert
         mockMvc.perform(post("/users/")
@@ -104,8 +115,12 @@ class UserControllerTest {
     @DisplayName("Should list all users successfully")
     void testListUsersSuccess() throws Exception {
         // Arrange
-        // Note: listUsers returns Page<UserResponse>, not DefaultResponse
-        // This test simplified for demonstration
+        var userResponse = UserResponse.builder()
+                .id(1L).username("testuser").email("test@example.com")
+                .role(RoleResponse.builder().id(1L).name("ADMIN").build())
+                .build();
+        Page<UserResponse> userPage = new PageImpl<>(List.of(userResponse), PageRequest.of(0, 20), 1);
+        when(userService.listUsers(anyString(), any(PageRequest.class))).thenReturn(userPage);
 
         // Act & Assert
         mockMvc.perform(get("/users/")
@@ -113,7 +128,8 @@ class UserControllerTest {
                 .param("size", "20")
                 .param("page", "0"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content[0].username").value("testuser"));
     }
 
     @Test

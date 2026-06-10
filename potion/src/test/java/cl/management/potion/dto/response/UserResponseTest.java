@@ -45,7 +45,7 @@ class UserResponseTest {
     @DisplayName("Should create UserResponse with all-arg constructor")
     void testUserResponseAllArgConstructor() {
         // Arrange
-        UserResponse response = new UserResponse(1L, "testuser", "test@example.com", mockRole);
+        UserResponse response = new UserResponse(1L, "testuser", "test@example.com", mockRole, true);
 
         // Act & Assert
         assertEquals(1L, response.getId());

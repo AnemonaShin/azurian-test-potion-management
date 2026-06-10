@@ -28,4 +28,6 @@ public class UserResponse {
   private String email;
 
   private RoleResponse role;
+
+  private boolean active;
 }

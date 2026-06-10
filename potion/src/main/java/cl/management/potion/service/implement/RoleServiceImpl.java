@@ -45,6 +45,7 @@ public class RoleServiceImpl implements RoleService {
               .id(roleEntity.getId())
               .name(roleEntity.getName())
               .roleIcon(roleEntity.getRoleIcon())
+              .active(roleEntity.isActive())
               .build());
     } catch (ServiceException exe) {
       log.error("Service Exception Error in 'listRoles': {}", exe);

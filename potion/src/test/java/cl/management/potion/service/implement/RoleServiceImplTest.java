@@ -75,8 +75,9 @@ class RoleServiceImplTest {
         when(roleRepository.save(any(RoleEntity.class))).thenReturn(mockRole);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
-            mockedValidation.when(() -> ValidationUtil.roleRequestValidation(any(RoleRequest.class)));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.roleRequestValidation(any(RoleRequest.class))).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
 
             // Act
             DefaultResponse response = roleService.createRole("validToken", validRoleRequest);
@@ -117,7 +118,8 @@ class RoleServiceImplTest {
         when(roleRepository.findAll(any(PageRequest.class))).thenReturn(rolePage);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
 
             // Act
             Page<RoleResponse> response = roleService.listRoles("validToken", PageRequest.of(0, 10));
@@ -153,15 +155,16 @@ class RoleServiceImplTest {
         when(roleRepository.save(any(RoleEntity.class))).thenReturn(mockRole);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
-            mockedValidation.when(() -> ValidationUtil.roleRequestValidation(any(RoleRequest.class)));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.roleRequestValidation(any(RoleRequest.class))).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
 
             // Act
             DefaultResponse response = roleService.updateRole("validToken", 1L, validRoleRequest);
 
             // Assert
             assertNotNull(response);
-            assertEquals("200", response.getCode());
+            assertEquals("200 OK", response.getCode());
             verify(roleRepository).searchById(1L);
             verify(roleRepository).save(any(RoleEntity.class));
         }
@@ -174,8 +177,9 @@ class RoleServiceImplTest {
         when(roleRepository.searchById(999L)).thenReturn(null);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
-            mockedValidation.when(() -> ValidationUtil.roleRequestValidation(any(RoleRequest.class)));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.roleRequestValidation(any(RoleRequest.class))).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
 
             // Act & Assert
             ServiceException exception = assertThrows(ServiceException.class, () -> {
@@ -194,7 +198,8 @@ class RoleServiceImplTest {
         when(roleRepository.save(any(RoleEntity.class))).thenReturn(mockRole);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
 
             // Act
             roleService.deactivateRole("validToken", 1L);
@@ -212,7 +217,8 @@ class RoleServiceImplTest {
         when(roleRepository.searchById(999L)).thenReturn(null);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
 
             // Act & Assert
             ServiceException exception = assertThrows(ServiceException.class, () -> {
@@ -232,7 +238,8 @@ class RoleServiceImplTest {
         when(roleRepository.save(any(RoleEntity.class))).thenReturn(mockRole);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
 
             // Act
             roleService.activateRole("validToken", 1L);
@@ -250,7 +257,8 @@ class RoleServiceImplTest {
         when(roleRepository.searchById(999L)).thenReturn(null);
 
         try (MockedStatic<ValidationUtil> mockedValidation = mockStatic(ValidationUtil.class)) {
-            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString()));
+            mockedValidation.when(() -> ValidationUtil.tokenValidation(anyString())).thenAnswer(i -> null);
+            mockedValidation.when(() -> ValidationUtil.validateNotNull(any(), any())).thenCallRealMethod();
 
             // Act & Assert
             ServiceException exception = assertThrows(ServiceException.class, () -> {

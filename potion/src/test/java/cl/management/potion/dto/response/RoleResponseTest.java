@@ -38,7 +38,7 @@ class RoleResponseTest {
     @DisplayName("Should create RoleResponse with all-arg constructor")
     void testRoleResponseAllArgConstructor() {
         // Arrange
-        RoleResponse response = new RoleResponse(1L, "ADMIN", "admin-icon");
+        RoleResponse response = new RoleResponse(1L, "ADMIN", "admin-icon", true);
 
         // Act & Assert
         assertEquals(1L, response.getId());

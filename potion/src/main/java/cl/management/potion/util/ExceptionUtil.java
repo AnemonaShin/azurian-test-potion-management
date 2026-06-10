@@ -28,7 +28,12 @@ public class ExceptionUtil {
    * @throws ServiceException Custom Exception Object.
    */
   public final ExceptionListEnum dataIntegrityErrors(DataIntegrityViolationException divx) throws ServiceException {
-    switch (divx.getMessage()) {
+    var message = divx.getMessage();
+    if (message == null) {
+      log.error("DataIntegrityViolationException with null message");
+      return ExceptionListEnum.DEFAULT_DATA_INTEGRITY_ERROR;
+    }
+    switch (message) {
       case String username when username.contains("(username)"):
         log.error("USER USERNAME DUPLICATION ERROR");
         return ExceptionListEnum.USER_USERNAME_ALREADY_EXIST;

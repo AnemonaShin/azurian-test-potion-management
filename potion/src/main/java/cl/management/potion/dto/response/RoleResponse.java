@@ -27,4 +27,5 @@ public class RoleResponse {
 
     private String roleIcon;
 
+    private boolean active;
 }

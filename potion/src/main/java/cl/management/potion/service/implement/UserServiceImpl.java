@@ -111,6 +111,7 @@ public class UserServiceImpl implements UserService {
               .id(userEntity.getId())
               .username(userEntity.getUsername())
               .email(userEntity.getEmail())
+              .active(userEntity.isActive())
               .role(RoleResponse.builder()
                   .id(userEntity.getRole().getId())
                   .name(userEntity.getRole().getName())
@@ -152,6 +153,9 @@ public class UserServiceImpl implements UserService {
 
       log.info("FINAL - DATA INSERTED TO DB");
       return DefaultResponse.builder().code(String.valueOf(HttpStatus.OK.value())).message("USER REGISTERED").build();
+    } catch (ServiceException exe) {
+      log.error("Service Exception Error in 'registerUser': {}", exe);
+      throw new ServiceException(exe.getStatusCode(), exe.getCode(), exe.getMessage());
     } catch (DataIntegrityViolationException divx) {
       log.error("DataIntegrityViolationException Error inside 'registerUser': {}", divx);
       throw new ServiceException(ExceptionUtil.dataIntegrityErrors(divx));

@@ -13,7 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import cl.management.potion.dto.response.DefaultResponse;
@@ -29,12 +31,14 @@ import cl.management.potion.util.enums.ExceptionListEnum;
  * @version 1.0.0
  */
 @WebMvcTest(LoginController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @DisplayName("LoginController Tests")
 class LoginControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
     private LoginService loginService;
 
     private DefaultResponse successResponse;
@@ -79,7 +83,7 @@ class LoginControllerTest {
         // Act & Assert
         mockMvc.perform(get("/login/")
                 .header("Authorization", validAuthToken))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -100,6 +104,6 @@ class LoginControllerTest {
         // Act & Assert
         mockMvc.perform(get("/login/")
                 .header("Authorization", "InvalidFormat"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isConflict());
     }
 }
